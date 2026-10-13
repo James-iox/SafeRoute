@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08121a">
+  <meta name="description" content="SafeRoute interactive evacuation-routing simulation for a multidisciplinary engineering project.">
+  <title>SafeRoute — Adaptive Route Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="SafeRoute home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M18 3.8 29.2 8v8.6c0 7.7-4.8 12.4-11.2 15.2C11.6 29 6.8 24.3 6.8 16.6V8L18 3.8Z" stroke="currentColor" stroke-width="1.8"/><path d="m11.7 18.2 4.1 4.1 8.8-9.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-copy"><strong>SafeRoute<span class="brand-period">.</span></strong><small>ADAPTIVE ROUTE INTELLIGENCE</small></span>
+      </a>
+
+      <div class="topbar-tools">
+        <span class="environment-pill"><span class="live-dot"></span><span>LOCAL SIMULATION</span></span>
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <span class="prototype-label">MDP / 2026–27</span>
+        <button class="icon-button mobile-reset" id="reset-button" type="button" aria-label="Reset simulation" title="Reset simulation">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 10a7.5 7.5 0 1 1 1.7 6.8M4.5 4.8V10h5.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy-block">
+          <div class="eyebrow"><span class="eyebrow-line"></span> INDOOR EVACUATION / ROUTE SIMULATOR</div>
+          <h1 id="hero-title">A changing floor.<br><span>A smarter route.</span></h1>
+          <p class="hero-description">Explore how a route can adapt when a corridor or exit becomes unavailable. Change the scenario, recalculate the graph, and inspect the result.</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="hero-run-button" type="button">
+              <span>Run normal scenario</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <a class="quiet-link" href="#simulation">Explore simulation <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-proof-row">
+            <span class="proof-item"><span class="proof-check">✓</span> Dijkstra pathfinding</span>
+            <span class="proof-item"><span class="proof-check">✓</span> Interactive hazard toggles</span>
+            <span class="proof-item"><span class="proof-check">✓</span> No-route detection</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Illustration of a changing route through a building graph">
+          <div class="visual-grid" aria-hidden="true"></div>
+          <div class="visual-orbit orbit-a" aria-hidden="true"></div>
+          <div class="visual-orbit orbit-b" aria-hidden="true"></div>
+          <div class="visual-label label-top"><span class="label-dot"></span> ROUTE ENGINE <b>READY</b></div>
+          <svg class="hero-graph" viewBox="0 0 500 330" role="img" aria-label="Abstract node-link graph showing a route to an exit">
+            <defs>
+              <linearGradient id="heroRouteGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c5f36f"/><stop offset="1" stop-color="#49d9b5"/></linearGradient>
+              <filter id="heroGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g class="hero-edges">
+              <path d="M75 83 178 128 280 84 385 126"/>
+              <path d="M75 83 75 235 178 190 280 235 385 126"/>
+              <path d="M178 128 178 190 280 84"/>
+              <path d="M280 235 385 260"/>
+              <path class="hero-edge-muted" d="M280 84 280 235"/>
+            </g>
+            <g class="hero-route" filter="url(#heroGlow)"><path d="M75 83 178 128 280 84 385 126"/></g>
+            <g class="hero-block"><circle cx="280" cy="159" r="13"/><path d="m274 153 12 12m0-12-12 12"/></g>
+            <g class="hero-node room-node"><rect x="38" y="58" width="74" height="50" rx="10"/><text x="75" y="78">ROOM</text><text x="75" y="94" class="node-small">01</text></g>
+            <g class="hero-node junction-node"><circle cx="178" cy="128" r="17"/><text x="178" y="132">J1</text></g>
+            <g class="hero-node junction-node"><circle cx="280" cy="84" r="17"/><text x="280" y="88">J2</text></g>
+            <g class="hero-node exit-node"><rect x="350" y="100" width="70" height="52" rx="10"/><text x="385" y="121">EXIT</text><text x="385" y="137" class="node-small">B</text></g>
+            <g class="hero-node room-node faded-node"><rect x="38" y="210" width="74" height="50" rx="10"/><text x="75" y="230">ROOM</text><text x="75" y="246" class="node-small">02</text></g>
+            <g class="hero-node junction-node faded-node"><circle cx="178" cy="190" r="17"/><text x="178" y="194">J3</text></g>
+            <g class="hero-node junction-node faded-node"><circle cx="280" cy="235" r="17"/><text x="280" y="239">J4</text></g>
+            <g class="hero-node exit-node faded-node"><rect x="350" y="234" width="70" height="52" rx="10"/><text x="385" y="255">EXIT</text><text x="385" y="271" class="node-small">A</text></g>
+            <circle class="scan-dot" cx="178" cy="128" r="4"/>
+            <circle class="scan-dot scan-dot-delay" cx="280" cy="84" r="4"/>
+          </svg>
+          <div class="visual-label label-bottom"><span>GRAPH UPDATE</span><span class="label-arrow">↗</span><b>PATH RECALCULATED</b></div>
+          <div class="visual-caption"><span class="caption-bar"></span> CONCEPTUAL ROUTE GRAPH <span>01 / 02 EXITS AVAILABLE</span></div>
+        </div>
+      </section>
+
+      <section class="metrics-grid" aria-label="Simulation summary">
+        <article class="metric-card metric-status">
+          <div class="metric-header"><span>ROUTE STATUS</span><span class="metric-icon icon-status"><svg viewBox="0 0 24 24" fill="none"><path d="M4 17.5 9.2 12l3.2 3.2L20 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 7.5H20v4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <strong id="stat-status" class="metric-value">Calculating</strong><small id="stat-status-note">Checking accessible paths</small>
+          <div class="metric-bottom"><span class="metric-track"><i id="status-track"></i></span><span id="status-mini">LIVE SIM</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-header"><span>SELECTED EXIT</span><span class="metric-icon icon-exit"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V4h11v16M15 12h5m-3-3 3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <strong id="stat-exit" class="metric-value">—</strong><small>Lowest-cost available exit</small>
+          <div class="metric-bottom"><span class="metric-text" id="exit-note">Awaiting route</span><span class="metric-accent exit-accent"></span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-header"><span>PATH COST</span><span class="metric-icon icon-cost"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M14.8 9.2c-.5-.7-1.4-1.1-2.7-1.1-1.5 0-2.5.7-2.5 1.7 0 2.8 5.4 1.1 5.4 4 0 1.1-1.1 2-2.8 2-1.3 0-2.4-.5-3.1-1.3M12 6.3v11.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
+          <strong id="stat-cost" class="metric-value">—</strong><small>Illustrative graph units</small>
+          <div class="metric-bottom"><span class="metric-text">Not metres or seconds</span><span class="metric-accent cost-accent"></span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-header"><span>ACTIVE BLOCKS</span><span class="metric-icon icon-hazard"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 21 19H3L12 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v4.5m0 2.4v.1" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span></div>
+          <strong id="stat-blocks" class="metric-value">0</strong><small>Corridors + exits unavailable</small>
+          <div class="metric-bottom"><span class="metric-text" id="block-note">All links available</span><span class="metric-accent hazard-accent"></span></div>
+        </article>
+      </section>
+
+      <section class="simulation-layout" id="simulation">
+        <article class="surface-card map-card">
+          <div class="section-heading map-heading">
+            <div><div class="section-kicker"><span class="kicker-dot"></span> INTERACTIVE MODEL</div><h2>Building network</h2><p class="section-subtitle">Tap a corridor in the map or use the controls to simulate a blockage.</p></div>
+            <div class="map-heading-actions"><span class="map-state-pill"><span class="map-state-dot"></span><span id="map-state-label">ROUTE ACTIVE</span></span><button id="map-reset-button" class="subtle-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 10a7.5 7.5 0 1 1 1.7 6.8M4.5 4.8V10h5.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg> Reset map</button></div>
+          </div>
+          <div class="map-canvas" id="map-canvas">
+            <div class="map-watermark" aria-hidden="true">SAFEROUTE <span>ROUTE GRAPH / A-01</span></div>
+            <svg id="building-map" viewBox="0 0 860 450" role="img" aria-label="Interactive schematic floor map with four rooms, three junctions, nine corridors and two exits">
+              <text x="430" y="220" text-anchor="middle" fill="#8ba1b6">Loading building graph…</text>
+            </svg>
+            <div class="map-overlay-legend"><span><i class="legend-line line-selected"></i> Selected route</span><span><i class="legend-line line-open"></i> Available</span><span><i class="legend-line line-blocked"></i> Blocked</span></div>
+          </div>
+          <div class="map-meta-row"><span><span class="meta-led"></span> Graph rendered from route API</span><span>SCHEMATIC / NOT TO SCALE</span></div>
+          <div class="map-interaction-tip"><span class="tip-icon">↗</span><span><strong>Interactive map</strong> Select any corridor line to toggle it between available and blocked.</span></div>
+        </article>
+
+        <aside class="surface-card control-card" aria-labelledby="controls-title">
+          <div class="section-heading controls-heading"><div><div class="section-kicker"><span class="kicker-dot amber"></span> SCENARIO LAB</div><h2 id="controls-title">Run a simulation</h2><p class="section-subtitle">Define a starting room and change route conditions.</p></div><button class="reset-text-button" id="reset-button-desktop" type="button">Reset</button></div>
+
+          <label class="control-label" for="start-room">STARTING LOCATION</label>
+          <div class="select-wrap"><select id="start-room" class="form-select"><option value="Room 1">Room 1</option><option value="Room 2">Room 2</option><option value="Room 3">Room 3</option><option value="Room 4">Room 4</option></select><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 9 5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+          <div class="control-divider"></div>
+          <div class="control-section-head"><span>PRESET SCENARIOS</span><span class="micro-label">ONE CLICK</span></div>
+          <div class="scenario-list">
+            <button class="scenario-card active" id="scenario-normal" type="button"><span class="scenario-icon icon-normal"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4.4 16.7A7.5 7.5 0 0 0 18.9 12M4 17v-5h5m5.6-4.7A7.5 7.5 0 0 0 5.1 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="scenario-copy"><strong>Normal conditions</strong><small>All routes available</small></span><span class="scenario-chevron">↗</span></button>
+            <button class="scenario-card" id="scenario-exita" type="button"><span class="scenario-icon icon-warning"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 21 19H3L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v4m0 3h.01" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span><span class="scenario-copy"><strong>Exit A unavailable</strong><small>Find an alternate exit</small></span><span class="scenario-chevron">↗</span></button>
+            <button class="scenario-card" id="scenario-c3" type="button"><span class="scenario-icon icon-corridor"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h7l4 10h7M3 17h4m6-10h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="scenario-copy"><strong>Central corridor blocked</strong><small>Block corridor C3</small></span><span class="scenario-chevron">↗</span></button>
+            <button class="scenario-card" id="scenario-isolated" type="button"><span class="scenario-icon icon-danger"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="m9 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="scenario-copy"><strong>Room 1 disconnected</strong><small>Block its only link C1</small></span><span class="scenario-chevron">↗</span></button>
+            <button class="scenario-card" id="scenario-noexits" type="button"><span class="scenario-icon icon-danger"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5 19 19M19 5 5 19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="scenario-copy"><strong>Both exits unavailable</strong><small>Verify no-route handling</small></span><span class="scenario-chevron">↗</span></button>
+          </div>
+
+          <div class="control-divider"></div>
+          <div class="control-section-head"><span>CORRIDOR STATUS</span><span id="corridor-count" class="micro-label">0 BLOCKED</span></div>
+          <p class="control-helper">Toggle a corridor to mark it unavailable in this scenario.</p>
+          <div id="corridor-controls" class="corridor-controls"></div>
+
+          <div class="control-divider"></div>
+          <div class="control-section-head"><span>EXIT STATUS</span><span class="micro-label">SIMULATED</span></div>
+          <div class="exit-toggles">
+            <label class="exit-toggle"><span class="exit-letter">A</span><span class="exit-toggle-copy"><strong>Exit A</strong><small>Direct upper exit</small></span><input type="checkbox" value="Exit A" class="exit-checkbox"><span class="toggle-track" aria-hidden="true"></span></label>
+            <label class="exit-toggle"><span class="exit-letter">B</span><span class="exit-toggle-copy"><strong>Exit B</strong><small>Eastern exit</small></span><input type="checkbox" value="Exit B" class="exit-checkbox"><span class="toggle-track" aria-hidden="true"></span></label>
+          </div>
+          <div class="simulation-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5m0-8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Hazard states are simulated. Sensor and microcontroller integration is not connected in this version.</span></div>
+        </aside>
+      </section>
+
+      <section class="results-layout" aria-label="Routing result and technical details">
+        <article class="surface-card route-result-card">
+          <div class="section-heading result-heading"><div><div class="section-kicker"><span class="kicker-dot"></span> ROUTING OUTPUT</div><h2>Calculated route</h2></div><span id="route-badge" class="result-badge waiting">WAITING</span></div>
+          <div id="route-message" class="route-message" role="status" aria-live="polite">Calculating the lowest-cost available route…</div>
+          <div class="route-output-label"><span>PATH SEQUENCE</span><span id="path-length">—</span></div>
+          <div id="route-steps" class="route-steps"><div class="route-placeholder"><span class="placeholder-spinner"></span> Route steps will appear here.</div></div>
+          <div class="route-footnote"><span class="footnote-icon">i</span><span>Dijkstra calculates the minimum-cost path from the supplied graph. Cost values are illustrative units, not real evacuation time or a guarantee of safety.</span></div>
+        </article>
+
+        <article class="surface-card system-card">
+          <div class="section-heading system-heading"><div><div class="section-kicker"><span class="kicker-dot blue"></span> SYSTEM DETAILS</div><h2>Prototype status</h2></div><span class="prototype-stamp">BUILD 0.2</span></div>
+          <div class="system-list">
+            <div class="system-row"><span>Routing algorithm</span><strong><span class="tiny-ok"></span>Dijkstra</strong></div>
+            <div class="system-row"><span>Route calculations</span><strong>Flask API</strong></div>
+            <div class="system-row"><span>Input source</span><strong class="state-warn">Simulated</strong></div>
+            <div class="system-row"><span>Physical sensors</span><strong class="state-muted">Not connected</strong></div>
+            <div class="system-row"><span>Directional LEDs</span><strong class="state-muted">Not connected</strong></div>
+          </div>
+          <div class="architecture-strip"><div class="architecture-step"><span>01</span><strong>Input</strong><small>Hazard state</small></div><i>→</i><div class="architecture-step"><span>02</span><strong>Process</strong><small>Graph + Dijkstra</small></div><i>→</i><div class="architecture-step"><span>03</span><strong>Output</strong><small>Route result</small></div></div>
+          <div class="system-bottom"><span class="system-bottom-icon">⌘</span><span><strong>Built for iteration</strong><small>Map data and edge costs are defined in <code>routing.py</code>.</small></span></div>
+        </article>
+      </section>
+
+      <section class="activity-section">
+        <div class="activity-title"><div><div class="section-kicker"><span class="kicker-dot amber"></span> SESSION ACTIVITY</div><h2>Recent scenario changes</h2></div><span class="activity-session-label">THIS SESSION</span></div>
+        <div class="activity-list" id="activity-list"><div class="activity-empty">Your scenario changes will be listed here as you test the routing behaviour.</div></div>
+      </section>
+
+      <section class="workflow-section" aria-labelledby="workflow-title">
+        <div class="workflow-header"><div><div class="section-kicker"><span class="kicker-dot"></span> UNDER THE HOOD</div><h2 id="workflow-title">From hazard state to route result</h2></div><p>One clear sequence: update availability, run the route engine, display the result.</p></div>
+        <div class="workflow-grid">
+          <article class="workflow-card"><span class="workflow-number">01</span><div class="workflow-symbol symbol-input"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v10m0 0 4-4m-4 4-4-4M5 15v4h14v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Set the condition</h3><p>Choose a starting room, block a corridor, or mark an exit unavailable.</p></article>
+          <article class="workflow-card"><span class="workflow-number">02</span><div class="workflow-symbol symbol-graph"><svg viewBox="0 0 24 24" fill="none"><circle cx="5" cy="6" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="18.5" cy="5" r="2" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="18" r="2" stroke="currentColor" stroke-width="1.7"/><path d="m7 6 9.5-1M6 8l5 8m6-9-4 10" stroke="currentColor" stroke-width="1.7"/></svg></div><h3>Update the graph</h3><p>Unavailable corridor connections and blocked exits are excluded from the search.</p></article>
+          <article class="workflow-card"><span class="workflow-number">03</span><div class="workflow-symbol symbol-route"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10m-4-4 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Run Dijkstra</h3><p>The Python route engine finds the lowest-cost path to a reachable exit.</p></article>
+          <article class="workflow-card"><span class="workflow-number">04</span><div class="workflow-symbol symbol-result"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5 9.2 17 19 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Inspect the output</h3><p>The map highlights the route—or clearly reports when no route is available.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><a class="footer-brand" href="#top">SafeRoute<span>.</span></a><span>VIT CHENNAI · MULTIDISCIPLINARY PROJECT</span><span>ACADEMIC SIMULATION / NOT FOR REAL EMERGENCY USE</span></footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
